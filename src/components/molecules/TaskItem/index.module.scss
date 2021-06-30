@@ -1,0 +1,73 @@
+.TaskItem {
+  position: relative;
+  font-size: 1.4rem;
+  width: 80vw;
+  &__pullDown {
+    position: absolute;
+    left: -30px;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 30px;
+  }
+  &__pullDownImage {
+    width: 10px;
+    height: 10px;
+    margin-top: 14px;
+    transform: rotate(-90deg);
+    transition: transform 0.3s;
+    &--active {
+      transform: rotate(0deg);
+    }
+  }
+  &__body {
+    border-bottom: solid 1px #dcdcdc;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  &__checkboxCircle {
+    height: 16px;
+    width: 16px;
+    border: 1px solid #dcdcdc;
+    border-radius: 50%;
+  }
+  &__content {
+    margin-left: 10px;
+    padding: 8px 0;
+  }
+  &--1 {
+    margin-left: 0px;
+  }
+  &--2 {
+    margin-left: 28px;
+  }
+  &--3 {
+    margin-left: 56px;
+  }
+  &--4 {
+    margin-left: 84px;
+  }
+  &--5 {
+    margin-left: 112px;
+  }
+  max-height: 50px;
+  height: auto;
+  transition: all 0.3s;
+  &--hidden {
+    max-height: 0;
+    height: 0;
+    transition: all 0.3s;
+    overflow-y: hidden;
+  }
+  &__childCounter {
+    color: #555;
+    font-weight: 500;
+    font-size: 1.2rem;
+  }
+  &__arrowIcon {
+    transform: rotate(180deg);
+    vertical-align: middle;
+  }
+}
