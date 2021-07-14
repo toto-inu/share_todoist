@@ -15,9 +15,9 @@
     "react-scripts": "4.0.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -37,6 +37,8 @@
   },
   "devDependencies": {
     "firebase-tools": "^9.14.0",
-    "node-sass": "4.14.1"
+    "node-sass": "4.14.1",
+    "react-app-rewired": "^2.1.8",
+    "react-router-dom": "^5.2.0"
   }
 }

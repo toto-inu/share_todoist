@@ -1,20 +1,22 @@
 import styles from "./index.module.scss";
 import { useDispatch } from 'react-redux';
-import { doneTask, deleteTask } from '../../../modules/tasks'
+import { doneTask, deleteTask } from '~/modules/tasks'
 // import TaskItem from "../../molecules/TaskItem/index";
-import arrowIcon from "../../../arrow_icon.png";
-import arrowDown from "../../../arrow_down.png";
+import arrowIcon from "~/arrow_icon.png";
+import arrowDown from "~/arrow_down.png";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 function TaskItem(args) {
   const task = args.task;
   const dispatch = useDispatch();
+
   const dispatchDoneTask = () => {
     dispatch(doneTask({id: task.id}));
   }
   const deleteItem = () => {
     dispatch(deleteTask({id: task.id}));
   }
+  
   return (
     <>
       <ContextMenuTrigger id={`contextMenu-${task.id}`}>

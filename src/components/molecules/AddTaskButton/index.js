@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setTask, selectTasks } from '~/modules/tasks'
 import styles from "./index.module.scss";
 
 
 function AddTaskButton(args) {
   const [ content, setContent ] = useState('');
-  const [tasks, setTasks] = [ args.tasks, args.setTasks ];
+  
+  const tasks = useSelector(selectTasks);
+  const dispatch = useDispatch();
   
   const validate = () => {
     return content !== "";
@@ -13,7 +17,7 @@ function AddTaskButton(args) {
   const addTask = () => (e) => {
     e.preventDefault();
     if (!validate()) return;
-    setTasks(content);
+    dispatch(setTask({ content }));
     setContent("");
   }
   
@@ -23,7 +27,7 @@ function AddTaskButton(args) {
   }
   
   return (
-    <form onSubmit={addTask(tasks, setTasks, content, setContent)} className={styles.addForm}>
+    <form onSubmit={addTask()} className={styles.addForm}>
       <div className={styles.addForm__content}>
         <input onChange={handleChange(setContent)} name="contents" value={content} placeholder="例: デザインのミーティング11時 p1 #ミーティング" className={styles.addForm__input}/>
       </div>
