@@ -18,7 +18,7 @@ function TaskView() {
       <ul className={styles.Section__body}>
         {tasks.map((task) => {
           if (!task.doneFlag) {
-            return <TaskItem task={task} />;
+            return <TaskItem task={task} key={task.id} />;
           }
         })}
         <li>

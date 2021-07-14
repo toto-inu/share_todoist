@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { setTask, selectTasks } from '~/modules/tasks'
+import { useDispatch } from 'react-redux';
+import { setTask } from '~/modules/tasks'
 import styles from "./index.module.scss";
 
 
 function AddTaskButton(args) {
   const [ content, setContent ] = useState('');
   
-  const tasks = useSelector(selectTasks);
   const dispatch = useDispatch();
   
   const validate = () => {
