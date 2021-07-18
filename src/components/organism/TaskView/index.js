@@ -1,16 +1,34 @@
 import React from 'react';
 
-import { useSelector } from 'react-redux';
-import { selectTasks } from '~/modules/tasks'
-
 import styles from "./index.module.scss";
 
 import TaskItem from "~/components/molecules/TaskItem/index";
 import AddTaskButton from "~/components/molecules/AddTaskButton/index";
 
+import { gql, useQuery } from "@apollo/client";
+
+const query = gql`
+  query MyQuery {
+    todoist(where: {done: {_eq: false}}) {
+      id
+      done
+      layer
+      # created_at
+      # updated_at
+      content
+      child_ids
+    }
+  }
+`;
 
 function TaskView() {
-  const tasks = useSelector(selectTasks);
+  const { data, loading } = useQuery(query);
+  if( loading || !data ) return null;
+
+  const tasks = data.todoist;
+
+  // 親子要素のマッチングができていない
+  // 親子のJSONを作成 → 平滑化することで順番を整理すること
 
   return (
     <div>

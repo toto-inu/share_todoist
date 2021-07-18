@@ -36,7 +36,9 @@
     ]
   },
   "devDependencies": {
+    "@apollo/client": "^3.3.21",
     "firebase-tools": "^9.14.0",
+    "graphql": "^15.5.1",
     "node-sass": "4.14.1",
     "react-app-rewired": "^2.1.8",
     "react-router-dom": "^5.2.0"

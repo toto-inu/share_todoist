@@ -6,13 +6,21 @@ import arrowIcon from "~/arrow_icon.png";
 import arrowDown from "~/arrow_down.png";
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
+import { gql, useMutation } from "@apollo/client";
+
 function TaskItem(args) {
   const task = args.task;
   const dispatch = useDispatch();
+  const doneMutation = gql`
+    mutation done($id: Int!) {
+      update_todoist(where: {id: {_eq: $id}}, _set: {done: true}) {
+        affected_rows
+      }
+    }
+  `
 
-  const dispatchDoneTask = () => {
-    dispatch(doneTask({id: task.id}));
-  }
+  const [doneTask, { data, loading }] = useMutation(doneMutation);
+
   const deleteItem = () => {
     dispatch(deleteTask({id: task.id}));
   }
@@ -26,7 +34,7 @@ function TaskItem(args) {
         >
           {/* 上記のhiddenは敢えてTypoすることでhiddenしないようにしている */}
           <div className={styles.TaskItem__body}>
-            {task.childIds.length !== 0 && (
+            {task.child_ids.length !== 0 && (
               <button className={styles.TaskItem__pullDown}>
                 <img
                   className={`${styles.TaskItem__pullDownImage} ${styles["TaskItem__pullDownImage--active"]}`}
@@ -35,12 +43,16 @@ function TaskItem(args) {
                 />
               </button>
             )}
-            <button className={styles.TaskItem__checkbox} onClick={dispatchDoneTask} >
+            <button className={styles.TaskItem__checkbox} onClick={e => {
+              doneTask({
+                variables: {id: task.id}
+              })
+            }} >
               <div className={styles.TaskItem__checkboxCircle}></div>
             </button>
             <div className={styles.TaskItem__content}>
               <div className={styles.TaskItem__contentText}>{task.content}</div>
-              {task.childIds.length !== 0 && (
+              {task.child_ids.length !== 0 && (
                 <div className={styles.TaskItem__childInfos}>
                   <img
                     src={arrowIcon}
@@ -50,7 +62,7 @@ function TaskItem(args) {
                     alt=""
                   />
                   <span className={styles.TaskItem__childCounter}>
-                    0/{task.childIds.length}
+                    0/{task.child_ids.length}
                   </span>
                 </div>
               )}

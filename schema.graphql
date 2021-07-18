@@ -1,0 +1,634 @@
+schema {
+  query: query_root
+  mutation: mutation_root
+  subscription: subscription_root
+}
+
+"""whether this query should be cached (Hasura Cloud only)"""
+directive @cached(
+  """measured in seconds"""
+  ttl: Int! = 60
+
+  """refresh the cache entry"""
+  refresh: Boolean! = false
+) on QUERY
+
+"""
+Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
+"""
+input Boolean_comparison_exp {
+  _eq: Boolean
+  _gt: Boolean
+  _gte: Boolean
+  _in: [Boolean!]
+  _is_null: Boolean
+  _lt: Boolean
+  _lte: Boolean
+  _neq: Boolean
+  _nin: [Boolean!]
+}
+
+"""
+Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
+"""
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+"""
+Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'.
+"""
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+
+  """does the column match the given case-insensitive pattern"""
+  _ilike: String
+  _in: [String!]
+
+  """
+  does the column match the given POSIX regular expression, case insensitive
+  """
+  _iregex: String
+  _is_null: Boolean
+
+  """does the column match the given pattern"""
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+
+  """does the column NOT match the given case-insensitive pattern"""
+  _nilike: String
+  _nin: [String!]
+
+  """
+  does the column NOT match the given POSIX regular expression, case insensitive
+  """
+  _niregex: String
+
+  """does the column NOT match the given pattern"""
+  _nlike: String
+
+  """
+  does the column NOT match the given POSIX regular expression, case sensitive
+  """
+  _nregex: String
+
+  """does the column NOT match the given SQL regular expression"""
+  _nsimilar: String
+
+  """
+  does the column match the given POSIX regular expression, case sensitive
+  """
+  _regex: String
+
+  """does the column match the given SQL regular expression"""
+  _similar: String
+}
+
+scalar json
+
+"""
+Boolean expression to compare columns of type "json". All fields are combined with logical 'AND'.
+"""
+input json_comparison_exp {
+  _eq: json
+  _gt: json
+  _gte: json
+  _in: [json!]
+  _is_null: Boolean
+  _lt: json
+  _lte: json
+  _neq: json
+  _nin: [json!]
+}
+
+"""mutation root"""
+type mutation_root {
+  """
+  delete data from the table: "todoist"
+  """
+  delete_todoist(
+    """filter the rows which have to be deleted"""
+    where: todoist_bool_exp!
+  ): todoist_mutation_response
+
+  """
+  delete single row from the table: "todoist"
+  """
+  delete_todoist_by_pk(id: Int!): todoist
+
+  """
+  insert data into the table: "todoist"
+  """
+  insert_todoist(
+    """the rows to be inserted"""
+    objects: [todoist_insert_input!]!
+
+    """on conflict condition"""
+    on_conflict: todoist_on_conflict
+  ): todoist_mutation_response
+
+  """
+  insert a single row into the table: "todoist"
+  """
+  insert_todoist_one(
+    """the row to be inserted"""
+    object: todoist_insert_input!
+
+    """on conflict condition"""
+    on_conflict: todoist_on_conflict
+  ): todoist
+
+  """
+  update data of the table: "todoist"
+  """
+  update_todoist(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: todoist_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: todoist_set_input
+
+    """filter the rows which have to be updated"""
+    where: todoist_bool_exp!
+  ): todoist_mutation_response
+
+  """
+  update single row of the table: "todoist"
+  """
+  update_todoist_by_pk(
+    """increments the numeric columns with given value of the filtered values"""
+    _inc: todoist_inc_input
+
+    """sets the columns of the filtered rows to the given values"""
+    _set: todoist_set_input
+    pk_columns: todoist_pk_columns_input!
+  ): todoist
+}
+
+"""column ordering options"""
+enum order_by {
+  """in ascending order, nulls last"""
+  asc
+
+  """in ascending order, nulls first"""
+  asc_nulls_first
+
+  """in ascending order, nulls last"""
+  asc_nulls_last
+
+  """in descending order, nulls first"""
+  desc
+
+  """in descending order, nulls first"""
+  desc_nulls_first
+
+  """in descending order, nulls last"""
+  desc_nulls_last
+}
+
+type query_root {
+  """
+  fetch data from the table: "todoist"
+  """
+  todoist(
+    """distinct select on columns"""
+    distinct_on: [todoist_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [todoist_order_by!]
+
+    """filter the rows returned"""
+    where: todoist_bool_exp
+  ): [todoist!]!
+
+  """
+  fetch aggregated fields from the table: "todoist"
+  """
+  todoist_aggregate(
+    """distinct select on columns"""
+    distinct_on: [todoist_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [todoist_order_by!]
+
+    """filter the rows returned"""
+    where: todoist_bool_exp
+  ): todoist_aggregate!
+
+  """fetch data from the table: "todoist" using primary key columns"""
+  todoist_by_pk(id: Int!): todoist
+}
+
+type subscription_root {
+  """
+  fetch data from the table: "todoist"
+  """
+  todoist(
+    """distinct select on columns"""
+    distinct_on: [todoist_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [todoist_order_by!]
+
+    """filter the rows returned"""
+    where: todoist_bool_exp
+  ): [todoist!]!
+
+  """
+  fetch aggregated fields from the table: "todoist"
+  """
+  todoist_aggregate(
+    """distinct select on columns"""
+    distinct_on: [todoist_select_column!]
+
+    """limit the number of rows returned"""
+    limit: Int
+
+    """skip the first n rows. Use only with order_by"""
+    offset: Int
+
+    """sort the rows by one or more columns"""
+    order_by: [todoist_order_by!]
+
+    """filter the rows returned"""
+    where: todoist_bool_exp
+  ): todoist_aggregate!
+
+  """fetch data from the table: "todoist" using primary key columns"""
+  todoist_by_pk(id: Int!): todoist
+}
+
+scalar timestamp
+
+"""
+Boolean expression to compare columns of type "timestamp". All fields are combined with logical 'AND'.
+"""
+input timestamp_comparison_exp {
+  _eq: timestamp
+  _gt: timestamp
+  _gte: timestamp
+  _in: [timestamp!]
+  _is_null: Boolean
+  _lt: timestamp
+  _lte: timestamp
+  _neq: timestamp
+  _nin: [timestamp!]
+}
+
+scalar timestamptz
+
+"""
+Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'.
+"""
+input timestamptz_comparison_exp {
+  _eq: timestamptz
+  _gt: timestamptz
+  _gte: timestamptz
+  _in: [timestamptz!]
+  _is_null: Boolean
+  _lt: timestamptz
+  _lte: timestamptz
+  _neq: timestamptz
+  _nin: [timestamptz!]
+}
+
+"""
+columns and relationships of "todoist"
+"""
+type todoist {
+  assigned_user_id: Int
+  child_ids(
+    """JSON select path"""
+    path: String
+  ): json!
+  content: String!
+  create_user_id: Int
+  created_at: timestamptz!
+  done: Boolean!
+  id: Int!
+  layer: Int!
+  limit: timestamp
+  updated_at: timestamp!
+}
+
+"""
+aggregated selection of "todoist"
+"""
+type todoist_aggregate {
+  aggregate: todoist_aggregate_fields
+  nodes: [todoist!]!
+}
+
+"""
+aggregate fields of "todoist"
+"""
+type todoist_aggregate_fields {
+  avg: todoist_avg_fields
+  count(columns: [todoist_select_column!], distinct: Boolean): Int!
+  max: todoist_max_fields
+  min: todoist_min_fields
+  stddev: todoist_stddev_fields
+  stddev_pop: todoist_stddev_pop_fields
+  stddev_samp: todoist_stddev_samp_fields
+  sum: todoist_sum_fields
+  var_pop: todoist_var_pop_fields
+  var_samp: todoist_var_samp_fields
+  variance: todoist_variance_fields
+}
+
+"""aggregate avg on columns"""
+type todoist_avg_fields {
+  assigned_user_id: Float
+  create_user_id: Float
+  id: Float
+  layer: Float
+}
+
+"""
+Boolean expression to filter rows from the table "todoist". All fields are combined with a logical 'AND'.
+"""
+input todoist_bool_exp {
+  _and: [todoist_bool_exp!]
+  _not: todoist_bool_exp
+  _or: [todoist_bool_exp!]
+  assigned_user_id: Int_comparison_exp
+  child_ids: json_comparison_exp
+  content: String_comparison_exp
+  create_user_id: Int_comparison_exp
+  created_at: timestamptz_comparison_exp
+  done: Boolean_comparison_exp
+  id: Int_comparison_exp
+  layer: Int_comparison_exp
+  limit: timestamp_comparison_exp
+  updated_at: timestamp_comparison_exp
+}
+
+"""
+unique or primary key constraints on table "todoist"
+"""
+enum todoist_constraint {
+  """unique or primary key constraint"""
+  todoist_pkey
+}
+
+"""
+input type for incrementing numeric columns in table "todoist"
+"""
+input todoist_inc_input {
+  assigned_user_id: Int
+  create_user_id: Int
+  id: Int
+  layer: Int
+}
+
+"""
+input type for inserting data into table "todoist"
+"""
+input todoist_insert_input {
+  assigned_user_id: Int
+  child_ids: json
+  content: String
+  create_user_id: Int
+  created_at: timestamptz
+  done: Boolean
+  id: Int
+  layer: Int
+  limit: timestamp
+  updated_at: timestamp
+}
+
+"""aggregate max on columns"""
+type todoist_max_fields {
+  assigned_user_id: Int
+  content: String
+  create_user_id: Int
+  created_at: timestamptz
+  id: Int
+  layer: Int
+  limit: timestamp
+  updated_at: timestamp
+}
+
+"""aggregate min on columns"""
+type todoist_min_fields {
+  assigned_user_id: Int
+  content: String
+  create_user_id: Int
+  created_at: timestamptz
+  id: Int
+  layer: Int
+  limit: timestamp
+  updated_at: timestamp
+}
+
+"""
+response of any mutation on the table "todoist"
+"""
+type todoist_mutation_response {
+  """number of rows affected by the mutation"""
+  affected_rows: Int!
+
+  """data from the rows affected by the mutation"""
+  returning: [todoist!]!
+}
+
+"""
+on conflict condition type for table "todoist"
+"""
+input todoist_on_conflict {
+  constraint: todoist_constraint!
+  update_columns: [todoist_update_column!]! = []
+  where: todoist_bool_exp
+}
+
+"""Ordering options when selecting data from "todoist"."""
+input todoist_order_by {
+  assigned_user_id: order_by
+  child_ids: order_by
+  content: order_by
+  create_user_id: order_by
+  created_at: order_by
+  done: order_by
+  id: order_by
+  layer: order_by
+  limit: order_by
+  updated_at: order_by
+}
+
+"""primary key columns input for table: todoist"""
+input todoist_pk_columns_input {
+  id: Int!
+}
+
+"""
+select columns of table "todoist"
+"""
+enum todoist_select_column {
+  """column name"""
+  assigned_user_id
+
+  """column name"""
+  child_ids
+
+  """column name"""
+  content
+
+  """column name"""
+  create_user_id
+
+  """column name"""
+  created_at
+
+  """column name"""
+  done
+
+  """column name"""
+  id
+
+  """column name"""
+  layer
+
+  """column name"""
+  limit
+
+  """column name"""
+  updated_at
+}
+
+"""
+input type for updating data in table "todoist"
+"""
+input todoist_set_input {
+  assigned_user_id: Int
+  child_ids: json
+  content: String
+  create_user_id: Int
+  created_at: timestamptz
+  done: Boolean
+  id: Int
+  layer: Int
+  limit: timestamp
+  updated_at: timestamp
+}
+
+"""aggregate stddev on columns"""
+type todoist_stddev_fields {
+  assigned_user_id: Float
+  create_user_id: Float
+  id: Float
+  layer: Float
+}
+
+"""aggregate stddev_pop on columns"""
+type todoist_stddev_pop_fields {
+  assigned_user_id: Float
+  create_user_id: Float
+  id: Float
+  layer: Float
+}
+
+"""aggregate stddev_samp on columns"""
+type todoist_stddev_samp_fields {
+  assigned_user_id: Float
+  create_user_id: Float
+  id: Float
+  layer: Float
+}
+
+"""aggregate sum on columns"""
+type todoist_sum_fields {
+  assigned_user_id: Int
+  create_user_id: Int
+  id: Int
+  layer: Int
+}
+
+"""
+update columns of table "todoist"
+"""
+enum todoist_update_column {
+  """column name"""
+  assigned_user_id
+
+  """column name"""
+  child_ids
+
+  """column name"""
+  content
+
+  """column name"""
+  create_user_id
+
+  """column name"""
+  created_at
+
+  """column name"""
+  done
+
+  """column name"""
+  id
+
+  """column name"""
+  layer
+
+  """column name"""
+  limit
+
+  """column name"""
+  updated_at
+}
+
+"""aggregate var_pop on columns"""
+type todoist_var_pop_fields {
+  assigned_user_id: Float
+  create_user_id: Float
+  id: Float
+  layer: Float
+}
+
+"""aggregate var_samp on columns"""
+type todoist_var_samp_fields {
+  assigned_user_id: Float
+  create_user_id: Float
+  id: Float
+  layer: Float
+}
+
+"""aggregate variance on columns"""
+type todoist_variance_fields {
+  assigned_user_id: Float
+  create_user_id: Float
+  id: Float
+  layer: Float
+}
+
