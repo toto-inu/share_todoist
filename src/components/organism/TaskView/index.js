@@ -22,7 +22,7 @@ const query = gql`
 `;
 
 function TaskView() {
-  const { data, loading } = useQuery(query);
+  const { data, loading, refetch } = useQuery(query);
   if( loading || !data ) return null;
 
   const tasks = data.todoist;
@@ -36,11 +36,11 @@ function TaskView() {
       <ul className={styles.Section__body}>
         {tasks.map((task) => {
           if (!task.doneFlag) {
-            return <TaskItem task={task} key={task.id} />;
+            return <TaskItem task={task} key={task.id} refetch={refetch} />;
           }
         })}
         <li>
-          <AddTaskButton />
+          <AddTaskButton refetch={refetch} />
         </li>
       </ul>
     </div>

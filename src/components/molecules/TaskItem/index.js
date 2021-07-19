@@ -1,6 +1,4 @@
 import styles from "./index.module.scss";
-import { useDispatch } from 'react-redux';
-import { doneTask, deleteTask } from '~/modules/tasks'
 // import TaskItem from "../../molecules/TaskItem/index";
 import arrowIcon from "~/arrow_icon.png";
 import arrowDown from "~/arrow_down.png";
@@ -9,8 +7,9 @@ import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 import { gql, useMutation } from "@apollo/client";
 
 function TaskItem(args) {
-  const task = args.task;
-  const dispatch = useDispatch();
+  const { task, refetch } = args;
+
+  // Graphql Mutations
   const doneMutation = gql`
     mutation done($id: Int!) {
       update_todoist(where: {id: {_eq: $id}}, _set: {done: true}) {
@@ -19,11 +18,26 @@ function TaskItem(args) {
     }
   `
 
-  const [doneTask, { data, loading }] = useMutation(doneMutation);
+  const deleteMutation = gql`
+    mutation delete($id: Int!) {
+      delete_todoist(where: {id: {_eq: $id}}) {
+        affected_rows
+      }
+    }
+  `
 
-  const deleteItem = () => {
-    dispatch(deleteTask({id: task.id}));
-  }
+  // GraphQL get [Mutation Methods]
+  const [doneTask] = useMutation(doneMutation,{
+    update() {
+      refetch();
+    }
+  });
+
+  const [deleteTask] = useMutation(deleteMutation,{
+    update() {
+      refetch();
+    }
+  });
   
   return (
     <>
@@ -71,7 +85,11 @@ function TaskItem(args) {
         </li>
       </ContextMenuTrigger>
       <ContextMenu id={`contextMenu-${task.id}`}>
-        <MenuItem onClick={deleteItem}>
+        <MenuItem onClick={e => {
+          deleteTask({
+            variables: {id: task.id}
+          })
+        }}>
           <span>削除</span>
         </MenuItem>
       </ContextMenu>

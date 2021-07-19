@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { setTask } from '~/modules/tasks'
 import styles from "./index.module.scss";
+
+import { gql, useMutation } from "@apollo/client";
 
 
 function AddTaskButton(args) {
+  const {refetch} = args;
   const [ content, setContent ] = useState('');
-  
-  const dispatch = useDispatch();
+
+  const addMutation = gql`
+    mutation addTask($content: String!) {
+      insert_todoist(objects: {content: $content}) {
+        affected_rows
+      }
+    }
+  `
+
+  const [addTaskMutation, {data, loading }] = useMutation(addMutation, {
+    update: () => {
+      refetch();
+    }
+  })
   
   const validate = () => {
     return content !== "";
@@ -16,7 +29,9 @@ function AddTaskButton(args) {
   const addTask = () => (e) => {
     e.preventDefault();
     if (!validate()) return;
-    dispatch(setTask({ content }));
+    addTaskMutation({
+      variables: {content: content}
+    });
     setContent("");
   }
   
