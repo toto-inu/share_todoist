@@ -41,6 +41,7 @@
     "graphql": "^15.5.1",
     "node-sass": "4.14.1",
     "react-app-rewired": "^2.1.8",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "subscriptions-transport-ws": "^0.9.19"
   }
 }

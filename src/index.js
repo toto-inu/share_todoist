@@ -2,7 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { InMemoryCache, ApolloProvider, ApolloClient } from "@apollo/client";
+
+import { InMemoryCache, ApolloProvider, ApolloClient, HttpLink, split } from "@apollo/client";
+import { getMainDefinition } from '@apollo/client/utilities';
+import { WebSocketLink } from '@apollo/client/link/ws';
+
 import * as serviceWorker from './serviceWorker';
 
 import "~/styles/reset.scss"
@@ -11,9 +15,32 @@ import "~/styles/foundation.scss"
 import { store } from './app/store';
 import { App } from '~/pages/App/index';
 
+
+const httpLink = new HttpLink({
+  uri: 'https://totoinu-todoist.herokuapp.com/v1/graphql'
+})
+const wsLink = new WebSocketLink({
+  uri: 'wss://totoinu-todoist.herokuapp.com/v1/graphql',
+  options: {
+    reconnect: true
+  }
+})
+
+const splitLink = split(
+  ({query}) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink
+)
+
 const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  uri: "https://totoinu-todoist.herokuapp.com/v1/graphql"
+  link: splitLink,
+  cache: new InMemoryCache()
 })
 
 ReactDOM.render(
