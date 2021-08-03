@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import { InMemoryCache, ApolloProvider, ApolloClient, HttpLink, split } from "@apollo/client";
 import { getMainDefinition } from '@apollo/client/utilities';
@@ -11,9 +12,12 @@ import * as serviceWorker from './serviceWorker';
 
 import "~/styles/reset.scss"
 import "~/styles/foundation.scss"
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { store } from './app/store';
 import { App } from '~/pages/App/index';
+import { Top } from '~/pages/Top/index';
+import { ProtectedRoute } from "./ProtectedRoute";
 
 
 const httpLink = new HttpLink({
@@ -49,14 +53,20 @@ ReactDOM.render(
     <ApolloProvider client={client}>
       {/* Redux Store */}
       <Provider store={store}>
-        {/* Routing */}
-        <Router>
-          <Switch>
-            <Route path="/">
-              <App />
-            </Route>
-          </Switch>
-        </Router>
+        <Auth0Provider
+          domain="totoinu-test.jp.auth0.com"
+          clientId="6SPljPZWaYdp3vXWeTaQPzK4ZXqD3HET"
+          redirectUri={window.location.origin}
+        >
+          {/* Routing */}
+          <Router>
+            <Switch>
+              <Route exact path="/" component={Top} />
+              <ProtectedRoute path="/app" component={App} />
+              <Redirect to="/" />
+            </Switch>
+          </Router>
+        </Auth0Provider>
       </Provider>
     </ApolloProvider>
   </React.StrictMode>,
