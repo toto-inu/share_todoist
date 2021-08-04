@@ -4,22 +4,23 @@ import { Button } from 'react-bootstrap';
 import { Nav, Container, Row, Col } from 'react-bootstrap';
 
 import { useAuth0 } from "@auth0/auth0-react";
+import { withRouter } from 'react-router';
 
-function Header() {
+function Header(props) {
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
   return (
     <div className={styles.Header}>
       <div className={styles.Header__wrapper}>
         <Container>
-          <Row>
+          <Row lg>
             <Col xs={1}></Col>
             <Col xs={5}>
-              <Nav className="justify-content-start" activeKey="/home">
+              <Nav fill variant="tabs" className="justify-content-start">
                 <Nav.Item>
-                  <Nav.Link href="/">Top</Nav.Link>
+                  <Nav.Link eventKey="top" onClick={()=>{props.history.push("/")}}>Top</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link href="/app">App</Nav.Link>
+                  <Nav.Link eventKey="app" onClick={()=>{props.history.push("/app")}}>App</Nav.Link>
                 </Nav.Item>
               </Nav>
             </Col>
@@ -27,11 +28,20 @@ function Header() {
               <Nav className="justify-content-end" activeKey="/home">
                 <Nav.Item>
                   {!isAuthenticated ? (
-                    <Button
-                      variant="outline-light"
-                      size="lg"
-                      onClick={loginWithRedirect}
-                    >ログイン</Button>
+                    <>
+                      <Button
+                        variant="outline-light"
+                        size="lg"
+                        onClick={loginWithRedirect}
+                      >ログイン</Button>
+                      <Button
+                        variant="outline-light"
+                        size="lg"
+                        onClick={() => {
+                          logout({ returnTo: window.location.origin });
+                        }}
+                      >ログアウト</Button>
+                    </>
                   ) : (
                     <Button
                       variant="outline-light"
@@ -53,4 +63,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default withRouter(Header);
