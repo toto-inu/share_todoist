@@ -54,8 +54,8 @@ ReactDOM.render(
       {/* Redux Store */}
       <Provider store={store}>
         <Auth0Provider
-          domain="totoinu-test.jp.auth0.com"
-          clientId="6SPljPZWaYdp3vXWeTaQPzK4ZXqD3HET"
+          domain="process.env.totoinu-test.jp.auth0.com"
+          clientId="process.env.REACT_APP_AUTH0_CLIENT_ID"
           redirectUri={window.location.origin}
         >
           {/* Routing */}
